@@ -3,367 +3,450 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Belajar Interaksi Manusia & Komputer</title>
+    <title>Portal Siswa - YPI Nurul Hadina</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1s ease-in;
-        }
-
-        h1 {
-            font-size: 3em;
-            color: #667eea;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .subtitle {
-            font-size: 1.3em;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .hero-icons {
-            font-size: 4em;
-            margin: 20px 0;
-            animation: bounce 2s infinite;
-        }
-
-        .section {
-            background: white;
-            border-radius: 25px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .section:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .section h2 {
-            color: #764ba2;
-            font-size: 2.2em;
-            margin-bottom: 25px;
+        /* ===== INDEX PAGE SPECIFIC STYLES ===== */
+        .login-container {
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            z-index: 10;
         }
 
-        .icon {
-            font-size: 1.2em;
-        }
-
-        .cards {
+        .login-wrapper {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            max-width: 900px;
+            width: 100%;
         }
 
-        .card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            padding: 30px;
-            border-radius: 20px;
+        .login-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-pink));
+        }
+
+        .logo-section {
             text-align: center;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1rem;
         }
 
-        .card:hover {
-            transform: scale(1.08) rotate(2deg);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        .logo-section img {
+            max-width: 50px;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5));
         }
 
-        .card-icon {
-            font-size: 3.5em;
-            margin-bottom: 15px;
-            animation: pulse 2s infinite;
+        .logo-section h1 {
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
         }
 
-        .card h3 {
-            font-size: 1.5em;
-            margin-bottom: 12px;
+        .logo-section p {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
         }
 
-        .card p {
-            font-size: 1em;
-            line-height: 1.6;
+        .form-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        .interactive-demo {
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            padding: 40px;
-            border-radius: 25px;
-            margin: 30px 0;
-            text-align: center;
-        }
-
-        .demo-button {
-            background: #667eea;
-            color: white;
+        .form-tab {
+            flex: 1;
+            padding: 0.6rem;
+            background: none;
             border: none;
-            padding: 20px 40px;
-            font-size: 1.3em;
-            border-radius: 50px;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            font-family: inherit;
-            margin: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s;
         }
 
-        .demo-button:hover {
-            background: #764ba2;
-            transform: scale(1.1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        .form-tab.active {
+            color: var(--accent-cyan);
         }
 
-        .demo-button:active {
-            transform: scale(0.95);
+        .form-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-cyan);
         }
 
-        #demo-result {
-            margin-top: 25px;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #764ba2;
-            min-height: 40px;
+        .form-content {
+            display: none;
         }
 
-        .fun-facts {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            padding: 30px;
-            border-radius: 20px;
-            margin-top: 20px;
+        .form-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
         }
 
-        .fun-facts h3 {
-            color: #667eea;
-            font-size: 1.8em;
-            margin-bottom: 15px;
+        .feature-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .fun-facts ul {
-            list-style: none;
-            padding-left: 0;
+        .feature-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
         }
 
-        .fun-facts li {
-            padding: 12px 0;
-            font-size: 1.1em;
-            border-bottom: 2px dashed #667eea;
+        .feature-box h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.6rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .fun-facts li:before {
-            content: "🎯 ";
-            margin-right: 10px;
+        .feature-box p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
         }
 
-        footer {
-            text-align: center;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            margin-top: 40px;
-            color: #667eea;
-            font-size: 1.2em;
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        * FEATURE ITEM - Compact */
+    .feature-item {
+        padding: 0.75rem; /* Dikurangi dari 1.5rem (50%) */
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        border-radius: 10px; /* Dikurangi dari 12px */
+        text-align: center;
+        transition: all 0.3s;
+    }
+
+    .feature-item:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-cyan);
+        box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+    }
+
+    .feature-item i {
+        font-size: 1.8rem; /* Dikurangi dari 2.5rem (72%) */
+        background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem; /* Dikurangi dari 1rem */
+    }
+
+    .feature-item h3 {
+        color: var(--text-primary);
+        margin-bottom: 0.3rem; /* Dikurangi dari 0.5rem */
+        font-size: 0.95rem; /* Dikurangi dari 1rem */
+    }
+
+    .feature-item p {
+        color: var(--text-secondary);
+        font-size: 0.75rem; /* Dikurangi dari 0.9rem (83%) */
+        margin: 0;
+    }
+
+    /* RESPONSIVE - Mobile Compact */
+    @media (max-width: 968px) {
+        .login-wrapper {
+            grid-template-columns: 1fr;
+            max-width: 500px; /* Lebih kecil untuk mobile */
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .feature-box {
+            order: -1;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .login-box,
+        .feature-box {
+            padding: 1rem; /* Extra compact untuk mobile kecil */
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        .logo-section h1 {
+            font-size: 1rem;
         }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2em; }
-            .subtitle { font-size: 1em; }
-            .section { padding: 25px; }
-            .cards { grid-template-columns: 1fr; }
+        .feature-box h2 {
+            font-size: 1.2rem;
         }
+    }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="hero-icons">💻👦👧🖱️</div>
-            <h1>Interaksi Manusia & Komputer</h1>
-            <p class="subtitle">Yuk Belajar Cara Kita Berkomunikasi dengan Komputer!</p>
-        </header>
+    <!-- Network Animation Canvas -->
+    <canvas id="network-canvas"></canvas>
 
-        <div class="section">
-            <h2><span class="icon">🤔</span> Apa Itu IMK?</h2>
-            <p style="font-size: 1.2em; line-height: 1.8; color: #555;">
-                Interaksi Manusia dan Komputer (IMK) adalah ilmu yang mempelajari bagaimana kita berkomunikasi dengan komputer, tablet, dan gadget lainnya. Sama seperti kita belajar cara berbicara dengan teman, kita juga perlu tahu cara "berbicara" dengan komputer agar lebih mudah dan menyenangkan!
-            </p>
-        </div>
+    <!-- Fallback Background Animation -->
+    <ul class="bg-animation">
+        <li></li><li></li><li></li><li></li><li></li>
+        <li></li><li></li><li></li><li></li><li></li>
+    </ul>
 
-        <div class="section">
-            <h2><span class="icon">🎮</span> Cara Kita Berinteraksi dengan Komputer</h2>
-            <div class="cards">
-                <div class="card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                    <div class="card-icon">🖱️</div>
-                    <h3>Mouse</h3>
-                    <p>Klik, geser, dan arahkan untuk memilih apa yang kamu mau!</p>
+    <div class="login-container">
+        <div class="login-wrapper">
+            <!-- Login Box -->
+            <div class="login-box">
+                <div class="logo-section">
+                    <img src="logo-ypi.png" alt="Logo YPI" onerror="this.style.display='none'">
+                    <h1>Portal Siswa</h1>
+                    <p>YPI Nurul Hadina</p>
                 </div>
-                <div class="card" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
-                    <div class="card-icon">⌨️</div>
-                    <h3>Keyboard</h3>
-                    <p>Ketik huruf, angka, dan perintah untuk berbicara dengan komputer!</p>
+
+                <!-- Form Tabs -->
+                <div class="form-tabs">
+                    <button class="form-tab active" data-tab="login">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </button>
+                    <button class="form-tab" data-tab="register">
+                        <i class="fa-solid fa-user-plus"></i> Daftar
+                    </button>
                 </div>
-                <div class="card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-                    <div class="card-icon">👆</div>
-                    <h3>Touchscreen</h3>
-                    <p>Sentuh layar dengan jari untuk bermain dan belajar!</p>
+
+                <!-- Alert -->
+                <div class="alert" id="alert-message"></div>
+
+                <!-- Form Login -->
+                <div class="form-content active" id="form-login">
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label>NIS</label>
+                            <div class="input-group">
+                                <i class="fa-solid fa-user"></i>
+                                <input type="text" id="login-nis" placeholder="Masukkan NIS Anda" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-group">
+                                <i class="fa-solid fa-lock"></i>
+                                <input type="password" id="login-password" placeholder="Masukkan Password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            Login
+                        </button>
+
+                        <p class="text-center text-muted mt-2">
+                            <a href="#" id="forgot-password" style="color: var(--accent-cyan);">Lupa Password?</a>
+                        </p>
+                    </form>
                 </div>
-                <div class="card" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
-                    <div class="card-icon">🎤</div>
-                    <h3>Suara</h3>
-                    <p>Bicara ke komputer dan komputer akan mendengarmu!</p>
+
+                <!-- Form Register -->
+                <div class="form-content" id="form-register">
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label>NIS</label>
+                            <div class="input-group">
+                                <i class="fa-solid fa-id-card"></i>
+                                <input type="text" id="register-nis" placeholder="NIS Anda" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <div class="input-group">
+                                <i class="fa-solid fa-user"></i>
+                                <input type="text" id="register-nama" placeholder="Nama Lengkap" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-group">
+                                <i class="fa-solid fa-lock"></i>
+                                <input type="password" id="register-password" placeholder="Buat Password" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tingkatan</label>
+                            <select id="register-tingkatan" required>
+                                <option value="">-- Pilih Tingkatan --</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Kelas</label>
+                            <select id="register-kelas" required>
+                                <option value="">-- Pilih Kelas --</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Daftar
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Feature Box -->
+            <div class="feature-box">
+                <h2>Selamat Datang</h2>
+                <p>Platform pembelajaran digital untuk siswa YPI Nurul Hadina. Akses materi, soal praktikum, dan ujian virtual dalam satu portal.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <i class="fa-solid fa-book"></i>
+                        <h3>Materi</h3>
+                        <p>Lengkap & Terstruktur</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fa-solid fa-laptop-code"></i>
+                        <h3>Praktikum</h3>
+                        <p>Interaktif & Realtime</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <h3>Ujian</h3>
+                        <p>Bank Soal Virtual</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <h3>Nilai</h3>
+                        <p>Laporan Realtime</p>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="section">
-            <h2><span class="icon">✨</span> Coba Interaksi Sekarang!</h2>
-            <div class="interactive-demo">
-                <h3 style="color: #764ba2; margin-bottom: 25px; font-size: 1.8em;">Demo Interaktif</h3>
-                <p style="font-size: 1.2em; margin-bottom: 25px; color: #555;">Klik tombol-tombol di bawah ini dan lihat apa yang terjadi!</p>
-                <button class="demo-button" onclick="showMessage('Hore! 🎉 Kamu berhasil mengklik tombol!')">Klik Aku!</button>
-                <button class="demo-button" onclick="changeColor()" style="background: #f5576c;">Ubah Warna!</button>
-                <button class="demo-button" onclick="playSound()" style="background: #4facfe;">Bunyi!</button>
-                <div id="demo-result"></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2><span class="icon">📚</span> Mengapa IMK Penting?</h2>
-            <div class="fun-facts">
-                <h3>Fakta Menarik:</h3>
-                <ul>
-                    <li>IMK membuat aplikasi lebih mudah digunakan untuk semua orang</li>
-                    <li>Desainer game menggunakan IMK agar game lebih seru dan tidak membingungkan</li>
-                    <li>Website yang bagus dibuat dengan memikirkan IMK</li>
-                    <li>IMK membantu membuat teknologi yang bisa digunakan oleh anak-anak hingga kakek nenek</li>
-                    <li>Dengan IMK, kita bisa membuat robot yang lebih pintar!</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2><span class="icon">🎨</span> Prinsip Desain yang Baik</h2>
-            <div class="cards">
-                <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <div class="card-icon">👀</div>
-                    <h3>Mudah Dilihat</h3>
-                    <p>Tulisan dan gambar harus jelas dan tidak membingungkan mata</p>
-                </div>
-                <div class="card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                    <div class="card-icon">🎯</div>
-                    <h3>Mudah Dipahami</h3>
-                    <p>Setiap tombol dan menu harus mudah dimengerti</p>
-                </div>
-                <div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                    <div class="card-icon">⚡</div>
-                    <h3>Cepat Merespon</h3>
-                    <p>Komputer harus cepat menanggapi apa yang kita lakukan</p>
-                </div>
-            </div>
-        </div>
-
-        <footer>
-            <p>🌟 Terus Belajar dan Bereksperimen dengan Teknologi! 🌟</p>
-            <p style="margin-top: 15px; font-size: 0.9em;">Ingat: Setiap aplikasi dan game yang kamu gunakan dibuat dengan prinsip IMK!</p>
-            <div style="margin-top: 30px; padding-top: 25px; border-top: 3px dashed #667eea;">
-                <p style="font-size: 1.1em; font-weight: bold; color: #764ba2;">📖 Bahan Ajar Informatika Kelas X</p>
-                <p style="margin-top: 10px; font-size: 1em; color: #667eea;">MA Plus Nurul Hadina</p>
-            </div>
-        </footer>
     </div>
 
+    <!-- Scripts -->
+    <script src="network-animation.js"></script>
+    <script type="module" src="auth.js"></script>
     <script>
-        let colors = ['#667eea', '#764ba2', '#f5576c', '#4facfe', '#fa709a', '#30cfd0'];
-        let currentColorIndex = 0;
+        // Tab Switching
+        const tabs = document.querySelectorAll('.form-tab');
+        const formContents = document.querySelectorAll('.form-content');
 
-        function showMessage(msg) {
-            const resultDiv = document.getElementById('demo-result');
-            resultDiv.textContent = msg;
-            resultDiv.style.animation = 'none';
-            setTimeout(() => {
-                resultDiv.style.animation = 'fadeIn 0.5s ease-in';
-            }, 10);
-        }
-
-        function changeColor() {
-            currentColorIndex = (currentColorIndex + 1) % colors.length;
-            document.body.style.background = `linear-gradient(135deg, ${colors[currentColorIndex]} 0%, ${colors[(currentColorIndex + 1) % colors.length]} 100%)`;
-            showMessage('Warna berubah! 🎨 Ini contoh interaksi visual!');
-        }
-
-        function playSound() {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 523.25; // Note C
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
-            
-            showMessage('Ting! 🔊 Ini contoh interaksi suara!');
-        }
-
-        // Add hover effect sound (optional, subtle)
-        document.querySelectorAll('.card, .demo-button').forEach(element => {
-            element.addEventListener('mouseenter', function() {
-                this.style.transition = 'all 0.3s ease';
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                formContents.forEach(fc => fc.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(`form-${targetTab}`).classList.add('active');
             });
         });
+
+        // Forgot Password
+        document.getElementById('forgot-password').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Hubungi admin untuk reset password.');
+        });
     </script>
+
+<!-- ============================================
+     STICKY FOOTER VERTICAL - Paste before </body>
+     ============================================ -->
+<footer class="footer-sticky">
+    <div class="footer-content">
+        <!-- Row 1: Copyright -->
+        <div class="footer-row-1">
+            &copy; 2025 Portal Informatika Siswa. MA PLUS & SMP IT YPI Nurul Hadina
+        </div>
+
+        <!-- Row 2: Developer Info -->
+        <div class="footer-row-2">
+            Dikembangkan Oleh : <strong>Fauzan Reza, S.T</strong> (Guru Informatika YPI Nurul Hadina)
+        </div>
+
+        <!-- Row 3: Links & Social Media -->
+        <div class="footer-row-3">
+            <!-- WhatsApp Link - GANTI NOMOR ANDA -->
+            <a href="https://wa.me/+6289504440411?text=Halo%20Admin%20Portal%20Siswa%20YPI" 
+               target="_blank" 
+               class="footer-link" 
+               title="Hubungi via WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i>
+                WhatsApp
+            </a>
+            
+            <span class="footer-separator">|</span>
+            
+            <a href="#" class="footer-link" onclick="alert('Versi 1.0.0 - Built with ❤️'); return false;">
+                <i class="fa-solid fa-info-circle"></i>
+                Info
+            </a>
+            
+            <span class="footer-separator">|</span>
+            
+            <!-- Social Media -->
+            <div class="footer-social">
+                <a href="https://instagram.com" target="_blank" class="footer-social-link" title="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://youtube.com" target="_blank" class="footer-social-link" title="YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a href="https://github.com" target="_blank" class="footer-social-link" title="GitHub">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
 </body>
 </html>
