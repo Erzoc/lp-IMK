@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Portal Siswa</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== ADMIN SPECIFIC STYLES ===== */
+        body {
+            padding-top: 0;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: white;
+            border-color: transparent;
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .content-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .content-card h3 {
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .content-card .meta {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-card .actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .file-upload-wrapper {
+            display: inline-block;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            background: var(--accent-cyan);
+            color: var(--bg-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .file-upload-label:hover {
+            background: var(--accent-purple);
+            transform: translateY(-2px);
+        }
+
+        .file-info {
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Network Animation Canvas -->
+    <canvas id="network-canvas"></canvas>
+
+    <!-- Fallback Background -->
+    <ul class="bg-animation">
+        <li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <!-- GOLD NAVBAR -->
+    <nav class="navbar-gold">
+        <h1>
+            <i class="fa-solid fa-user-shield"></i>
+            Admin Panel
+        </h1>
+        <div class="admin-info">
+            <div>
+                <strong>Nama:</strong> <span id="admin-nama">Loading...</span><br>
+                <strong>NIS:</strong> <span id="admin-nis">...</span><br>
+                <strong>Role:</strong> <span style="color: var(--gold); font-weight: 700;">ADMIN</span>
+            </div>
+            <button class="btn-logout" id="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="admin-container">
+        <!-- Section Tabs -->
+        <div class="section-tabs">
+            <button class="tab-btn active" data-section="manajemen-akun">
+                <i class="fa-solid fa-users"></i>
+                Manajemen Akun
+            </button>
+            <button class="tab-btn" data-section="upload-materi">
+                <i class="fa-solid fa-book"></i>
+                Upload Materi
+            </button>
+            <button class="tab-btn" data-section="upload-soal">
+                <i class="fa-solid fa-file-lines"></i>
+                Upload Soal
+            </button>
+        </div>
+
+        <!-- ===== SECTION 1: MANAJEMEN AKUN ===== -->
+        <div class="section-content active glass-container" id="manajemen-akun">
+            <h2><i class="fa-solid fa-users-gear"></i> Manajemen Akun</h2>
+            
+            <div class="alert" id="alert-akun"></div>
+
+            <form id="form-tambah-akun">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>NIS (Primary Key) *</label>
+                        <input type="text" id="akun-nis" placeholder="12345" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Lengkap *</label>
+                        <input type="text" id="akun-nama" placeholder="Nama siswa" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" id="akun-password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Role *</label>
+                        <select id="akun-role" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="siswa">Siswa</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tingkatan *</label>
+                        <select id="akun-tingkatan" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SMA">SMA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kelas *</label>
+                        <select id="akun-kelas" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Tambah
+                </button>
+            </form>
+
+            <hr style="border-color: var(--glass-border); margin: 2rem 0;">
+
+            <h3 class="text-cyan">Tambah Akun Massal (CSV)</h3>
+            <p class="text-muted mb-2">Format: nis,nama,password,role,tingkatan,kelas (Tanpa header)</p>
+            
+            <div class="file-upload-wrapper">
+                <input type="file" id="csv-file" accept=".csv">
+                <label for="csv-file" class="file-upload-label">
+                    <i class="fa-solid fa-file-csv"></i>
+                    Pilih File CSV
+                </label>
+            </div>
+            <div class="file-info" id="csv-info">Belum ada file</div>
+            <button class="btn btn-primary mt-2" id="btn-upload-csv">
+                <i class="fa-solid fa-upload"></i>
+                Upload CSV
+            </button>
+
+            <h3 class="text-cyan mt-3">Daftar Akun Terdaftar</h3>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>NIS</th>
+                            <th>Nama Lengkap</th>
+                            <th>Role</th>
+                            <th>Tingkatan</th>
+                            <th>Kelas</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-akun">
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 2: UPLOAD MATERI ===== -->
+        <div class="section-content glass-container" id="upload-materi">
+            <h2><i class="fa-solid fa-book-open"></i> Upload Materi</h2>
+            
+            <div class="alert" id="alert-materi"></div>
+
+            <form id="form-upload-materi">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Judul Materi *</label>
+                        <input type="text" id="materi-judul" placeholder="Pengenalan Python" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tingkatan *</label>
+                        <select id="materi-tingkatan" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SMA">SMA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kelas *</label>
+                        <select id="materi-kelas" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Deskripsi Singkat</label>
+                    <textarea id="materi-deskripsi" placeholder="Deskripsi materi..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload File (Max 1 MB) *</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="materi-file" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+                        <label for="materi-file" class="file-upload-label">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            Upload File
+                        </label>
+                    </div>
+                    <div class="file-info" id="materi-file-info">Belum ada file dipilih</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-upload"></i>
+                    Upload Materi
+                </button>
+            </form>
+
+            <h3 class="text-cyan mt-3">Materi Terupload</h3>
+            <div class="card-grid" id="list-materi">
+                <p class="text-muted">Loading...</p>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 3: UPLOAD SOAL ===== -->
+        <div class="section-content glass-container" id="upload-soal">
+            <h2><i class="fa-solid fa-clipboard-question"></i> Upload Soal</h2>
+            
+            <div class="alert" id="alert-soal"></div>
+
+            <form id="form-upload-soal">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Judul Soal *</label>
+                        <input type="text" id="soal-judul" placeholder="Soal Praktikum Array" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Soal *</label>
+                        <select id="soal-jenis" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="praktikum">Soal Praktikum</option>
+                            <option value="ujian">Soal Ujian</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tingkatan *</label>
+                        <select id="soal-tingkatan" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SMA">SMA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kelas *</label>
+                        <select id="soal-kelas" required>
+                            <option value="">-- Pilih --</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Deskripsi Singkat</label>
+                    <textarea id="soal-deskripsi" placeholder="Deskripsi soal..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload File (Max 1 MB) *</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="soal-file" accept=".pdf,.doc,.docx" required>
+                        <label for="soal-file" class="file-upload-label">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            Upload File
+                        </label>
+                    </div>
+                    <div class="file-info" id="soal-file-info">Belum ada file dipilih</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-upload"></i>
+                    Upload Soal
+                </button>
+            </form>
+
+            <h3 class="text-cyan mt-3">Soal Terupload</h3>
+            <div class="card-grid" id="list-soal">
+                <p class="text-muted">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Akun -->
+    <div class="modal" id="modal-edit">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Data Akun</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <form id="form-edit-akun">
+                <input type="hidden" id="edit-nis-old">
+                <div class="form-group">
+                    <label>NIS (Primary Key)</label>
+                    <input type="text" id="edit-nis" readonly style="opacity: 0.6;">
+                </div>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="edit-nama" required>
+                </div>
+                <div class="form-group">
+                    <label>Password Baru (Opsional)</label>
+                    <input type="password" id="edit-password" placeholder="Kosongkan jika tidak diubah">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="edit-role" required>
+                        <option value="siswa">Siswa</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tingkatan</label>
+                    <select id="edit-tingkatan" required>
+                        <option value="SMP">SMP</option>
+                        <option value="SMA">SMA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kelas</label>
+                    <select id="edit-kelas" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Simpan Perubahan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="network-animation.js"></script>
+    <script type="module" src="admin.js"></script>
+    <script>
+        // Tab Switching
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.section-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetSection = tab.dataset.section;
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(targetSection).classList.add('active');
+            });
+        });
+
+        // Modal Close
+        function closeModal() {
+            document.getElementById('modal-edit').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

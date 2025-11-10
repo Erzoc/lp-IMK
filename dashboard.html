@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Siswa - Portal YPI</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== DASHBOARD SPECIFIC STYLES ===== */
+        body {
+            padding-top: 0;
+        }
+
+        /* Navbar Student (Green Theme) */
+        .navbar-student {
+            background: linear-gradient(135deg, #1a4d2e, #2d7a4d);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 30px rgba(29, 77, 46, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-student h1 {
+            color: white;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .navbar-student .user-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar-student .user-info strong {
+            color: var(--gold);
+        }
+
+        .navbar-student .btn-logout {
+            background: rgba(255, 61, 61, 0.9);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .navbar-student .btn-logout:hover {
+            background: var(--error);
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .welcome-banner h2 {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .menu-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-card:hover::before {
+            left: 100%;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 15px 50px rgba(0, 212, 255, 0.4);
+        }
+
+        .menu-card-icon {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .menu-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.4rem;
+        }
+
+        .menu-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Content Section */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        /* Content Card (for materi/soal) */
+        .content-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .content-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .content-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .content-item-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-item-icon {
+            font-size: 2rem;
+            color: var(--accent-cyan);
+        }
+
+        .content-item-info h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 0.3rem;
+            font-size: 1.2rem;
+        }
+
+        .content-item-meta {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .content-item-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .content-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-section label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .filter-section select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* Back Button */
+        .btn-back {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-dark);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--glass-border);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-student {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Network Animation Canvas -->
+    <canvas id="network-canvas"></canvas>
+
+    <!-- Fallback Background -->
+    <ul class="bg-animation">
+        <li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <!-- NAVBAR (Green Theme for Student) -->
+    <nav class="navbar-student">
+        <h1>
+            <i class="fa-solid fa-graduation-cap"></i>
+            Portal Siswa
+        </h1>
+        <div class="user-info">
+            <div>
+                <strong id="user-nama">Loading...</strong><br>
+                <span style="font-size: 0.9rem;">
+                    <span id="user-tingkatan">...</span> Kelas <span id="user-kelas">...</span> • 
+                    NIS: <span id="user-nis">...</span>
+                </span>
+            </div>
+            <button class="btn-logout" id="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN DASHBOARD -->
+    <div class="dashboard-container">
+        <!-- Main Menu Section -->
+        <section id="main-menu" class="content-section active">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h2>Selamat Datang, <span id="welcome-nama">Siswa</span>!</h2>
+                <p>Platform pembelajaran digital YPI Nurul Hadina</p>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="menu-grid">
+                <!-- Materi Pembelajaran -->
+                <div class="menu-card" onclick="showSection('materi')">
+                    <div class="menu-card-icon">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <h3>Materi Pembelajaran</h3>
+                    <p>Akses semua materi, catatan, dan modul pelajaran</p>
+                </div>
+
+                <!-- Praktikum Online -->
+                <div class="menu-card" onclick="showSection('praktikum')">
+                    <div class="menu-card-icon">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h3>Praktikum Online</h3>
+                    <p>Lihat semua tugas dan panduan praktikum</p>
+                </div>
+
+                <!-- Ujian Virtual -->
+                <div class="menu-card" onclick="showSection('ujian')">
+                    <div class="menu-card-icon">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <h3>Ujian Virtual</h3>
+                    <p>Akses bank soal dan persiapan ujian Anda</p>
+                </div>
+
+                <!-- Laporan Nilai -->
+                <div class="menu-card" onclick="alert('Fitur ini sedang dalam pengembangan')">
+                    <div class="menu-card-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3>Laporan Nilai</h3>
+                    <p>Lihat rekap dan riwayat nilai Anda di sini</p>
+                </div>
+
+                <!-- Survey Harian -->
+                <div class="menu-card" onclick="alert('Fitur ini sedang dalam pengembangan')">
+                    <div class="menu-card-icon">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                    </div>
+                    <h3>Survey Harian</h3>
+                    <p>Isi absensi dan kuesioner harian Anda di sini</p>
+                </div>
+
+                <!-- Survey Siswa -->
+                <div class="menu-card" onclick="alert('Fitur ini sedang dalam pengembangan')">
+                    <div class="menu-card-icon">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <h3>Survey Siswa</h3>
+                    <p>Berikan masukan dan kepuasan Anda</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Materi Section -->
+        <section id="materi-section" class="content-section">
+            <button class="btn-back" onclick="showSection('main')">
+                <i class="fa-solid fa-arrow-left"></i>
+                Kembali ke Menu
+            </button>
+
+            <div class="glass-container">
+                <h2><i class="fa-solid fa-book-open"></i> Materi Pembelajaran</h2>
+                <p class="text-muted mb-3">Download materi sesuai tingkatan dan kelas Anda</p>
+
+                <!-- Filter -->
+                <div class="filter-section">
+                    <label>Filter:</label>
+                    <select id="filter-materi-tingkatan" onchange="filterMateri()">
+                        <option value="">Semua Tingkatan</option>
+                        <option value="SMP">SMP</option>
+                        <option value="SMA">SMA</option>
+                    </select>
+                    <select id="filter-materi-kelas" onchange="filterMateri()">
+                        <option value="">Semua Kelas</option>
+                        <option value="1">Kelas 1</option>
+                        <option value="2">Kelas 2</option>
+                        <option value="3">Kelas 3</option>
+                    </select>
+                </div>
+
+                <!-- Content Cards -->
+                <div class="content-cards" id="materi-list">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Praktikum Section -->
+        <section id="praktikum-section" class="content-section">
+            <button class="btn-back" onclick="showSection('main')">
+                <i class="fa-solid fa-arrow-left"></i>
+                Kembali ke Menu
+            </button>
+
+            <div class="glass-container">
+                <h2><i class="fa-solid fa-laptop-code"></i> Soal Praktikum</h2>
+                <p class="text-muted mb-3">Download soal praktikum sesuai tingkatan dan kelas Anda</p>
+
+                <!-- Filter -->
+                <div class="filter-section">
+                    <label>Filter:</label>
+                    <select id="filter-praktikum-tingkatan" onchange="filterPraktikum()">
+                        <option value="">Semua Tingkatan</option>
+                        <option value="SMP">SMP</option>
+                        <option value="SMA">SMA</option>
+                    </select>
+                    <select id="filter-praktikum-kelas" onchange="filterPraktikum()">
+                        <option value="">Semua Kelas</option>
+                        <option value="1">Kelas 1</option>
+                        <option value="2">Kelas 2</option>
+                        <option value="3">Kelas 3</option>
+                    </select>
+                </div>
+
+                <!-- Content Cards -->
+                <div class="content-cards" id="praktikum-list">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ujian Section -->
+        <section id="ujian-section" class="content-section">
+            <button class="btn-back" onclick="showSection('main')">
+                <i class="fa-solid fa-arrow-left"></i>
+                Kembali ke Menu
+            </button>
+
+            <div class="glass-container">
+                <h2><i class="fa-solid fa-file-lines"></i> Soal Ujian</h2>
+                <p class="text-muted mb-3">Download soal ujian sesuai tingkatan dan kelas Anda</p>
+
+                <!-- Filter -->
+                <div class="filter-section">
+                    <label>Filter:</label>
+                    <select id="filter-ujian-tingkatan" onchange="filterUjian()">
+                        <option value="">Semua Tingkatan</option>
+                        <option value="SMP">SMP</option>
+                        <option value="SMA">SMA</option>
+                    </select>
+                    <select id="filter-ujian-kelas" onchange="filterUjian()">
+                        <option value="">Semua Kelas</option>
+                        <option value="1">Kelas 1</option>
+                        <option value="2">Kelas 2</option>
+                        <option value="3">Kelas 3</option>
+                    </select>
+                </div>
+
+                <!-- Content Cards -->
+                <div class="content-cards" id="ujian-list">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="network-animation.js"></script>
+    <script type="module" src="dashboard.js"></script>
+
+    <!-- ============================================
+     STICKY FOOTER VERTICAL - Paste before </body>
+     ============================================ -->
+<footer class="footer-sticky">
+    <div class="footer-content">
+        <!-- Row 1: Copyright -->
+        <div class="footer-row-1">
+            &copy; 2025 Portal Informatika Siswa. MA PLUS & SMP IT YPI Nurul Hadina
+        </div>
+
+        <!-- Row 2: Developer Info -->
+        <div class="footer-row-2">
+            Dikembangkan Oleh : <strong>Fauzan Reza, S.T</strong> (Guru Informatika YPI Nurul Hadina)
+        </div>
+
+        <!-- Row 3: Links & Social Media -->
+        <div class="footer-row-3">
+            <!-- WhatsApp Link - GANTI NOMOR ANDA -->
+            <a href="https://wa.me/+6289504440411?text=Halo%20Admin%20Portal%20Siswa%20YPI" 
+               target="_blank" 
+               class="footer-link" 
+               title="Hubungi via WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i>
+                WhatsApp
+            </a>
+            
+            <span class="footer-separator">|</span>
+            
+            <a href="#" class="footer-link" onclick="alert('Versi 1.0.0 - Built with ❤️'); return false;">
+                <i class="fa-solid fa-info-circle"></i>
+                Info
+            </a>
+            
+            <span class="footer-separator">|</span>
+            
+            <!-- Social Media -->
+            <div class="footer-social">
+                <a href="https://instagram.com" target="_blank" class="footer-social-link" title="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://youtube.com" target="_blank" class="footer-social-link" title="YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a href="https://github.com" target="_blank" class="footer-social-link" title="GitHub">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+</body>
+</html>
